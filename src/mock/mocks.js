@@ -32,7 +32,7 @@ function createPoint(offers, destination) {
     type,
     basePrice: generateRandomNumber(20, 400),
     offers: selectedOffers.map((offer) => offer.id),
-    destination: destination.id,
+    destinationId: destination.id,
     isFavourite: getRandomArrayElement([true, false]),
     date: {
       start: DATES[dateIdx],

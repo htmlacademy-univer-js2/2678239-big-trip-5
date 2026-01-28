@@ -15,8 +15,6 @@ export default class Presenter {
   }
 
   init() {
-    const offers = this.model.getOffers();
-    const destinations = this.model.getDestinations();
     const points = this.model.getPoints();
     const eventListContainer = new EventListContainer();
     render(new FilterList(), this.filtersContainer);
@@ -24,14 +22,13 @@ export default class Presenter {
     render(eventListContainer, this.eventsContainer);
 
     const editingPoint = getRandomArrayElement(points);
-    const editingPointDestination = destinations.find((d) => d.id === editingPoint.destination);
-    const pointTypeOffers = offers.find((offer) => offer.type === editingPoint.type);
-    render(new EditPointForm({...editingPoint, destination: editingPointDestination}, pointTypeOffers.offers), eventListContainer.getElement());
+    const editingPointDestination = this.model.getDestinationById(editingPoint.destinationId);
+    const pointTypeOffers = this.model.getOffersByType(editingPoint.type);
+    render(new EditPointForm({...editingPoint, destination: editingPointDestination}, pointTypeOffers), eventListContainer.getElement());
 
     points.forEach((point) => {
-      const pointTypeOffer = offers.find((offer) => offer.type === point.type);
-      const destination = destinations.find((d) => d.id === point.destination);
-      const pointOffers = pointTypeOffer.offers.filter((offer) => point.offers.includes(offer.id));
+      const destination = this.model.getDestinationById(point.destinationId);
+      const pointOffers = this.model.getOffersByType(point.type, point.offers);
       const pointItem = new PointItem({...point, offers: pointOffers, destination: destination});
       render(
         pointItem,

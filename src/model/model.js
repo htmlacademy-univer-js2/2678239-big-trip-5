@@ -16,4 +16,17 @@ export default class Model {
   getDestinations() {
     return this.destinations;
   }
+
+  getOffersByType(type, ids = []) {
+    const offers = this.offers.find((o) => o.type === type).offers;
+    if (ids.length === 0) {
+      return offers;
+    } else {
+      return offers.filter((o) => ids.includes(o.id));
+    }
+  }
+
+  getDestinationById(id) {
+    return this.destinations.find((d) => d.id === id);
+  }
 }
