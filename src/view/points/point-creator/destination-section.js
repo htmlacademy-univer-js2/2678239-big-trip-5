@@ -1,4 +1,4 @@
-import {createElement} from '../../../render';
+import AbstractView from '../../../framework/view/abstract-view';
 
 function createTemplate() {
   return (
@@ -19,16 +19,8 @@ function createTemplate() {
   );
 }
 
-export default class DestinationSection {
-  getTemplate() {
+export default class DestinationSection extends AbstractView {
+  get template() {
     return createTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
   }
 }

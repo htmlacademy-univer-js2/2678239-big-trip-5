@@ -1,5 +1,6 @@
-import {createElement, render} from '../../render.js';
+import {createElement, render} from '../../framework/render.js';
 import SortingItem from './sorting-item.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 
 const DEFAULT_SORTING_OPTIONS = [
   { title: 'day', disabled: false, checked: false },
@@ -17,8 +18,10 @@ function createSortContainerTemplate() {
 }
 
 
-export default class SortingList {
+export default class SortingList extends AbstractView {
+  #element = null;
   constructor(sortingOptions = DEFAULT_SORTING_OPTIONS) {
+    super();
     this.sortingOptions = sortingOptions;
   }
 
@@ -32,14 +35,14 @@ export default class SortingList {
     );
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.getTemplate());
       this.createSortingItems().forEach((sortingItem) => {
         render(sortingItem, this.element);
       });
     }
 
-    return this.element;
+    return this.#element;
   }
 }

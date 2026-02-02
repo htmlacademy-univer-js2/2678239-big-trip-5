@@ -1,6 +1,7 @@
-import {createElement, render} from '../../../render';
+import {createElement, render} from '../../../framework/render.js';
 import DestinationSection from './destination-section.js';
 import OffersSection from './offers-section.js';
+import AbstractView from '../../../framework/view/abstract-view.js';
 
 function createTemplate() {
   return (
@@ -105,20 +106,22 @@ function createTemplate() {
   );
 }
 
-export default class CreatePointForm {
+export default class CreatePointForm extends AbstractView {
+  #element = null;
   constructor(offers = true, destination = true) {
+    super();
     this.offers = offers;
     this.destination = destination;
   }
 
-  getTemplate() {
+  get template() {
     return createTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-      const sectionContainer = this.element.querySelector('.event__details');
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+      const sectionContainer = this.#element.querySelector('.event__details');
 
       if (this.offers) {
         render(new OffersSection(), sectionContainer);
@@ -128,6 +131,6 @@ export default class CreatePointForm {
       }
     }
 
-    return this.element;
+    return this.#element;
   }
 }

@@ -1,4 +1,5 @@
-import {createElement} from '../../../render';
+import {createElement} from '../../../framework/render.js';
+import AbstractView from "../../../framework/view/abstract-view";
 
 function createTemplate() {
   return (
@@ -55,16 +56,8 @@ function createTemplate() {
   );
 }
 
-export default class OffersSection {
-  getTemplate() {
+export default class OffersSection extends AbstractView {
+  get template() {
     return createTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
   }
 }

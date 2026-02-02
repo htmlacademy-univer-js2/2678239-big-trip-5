@@ -1,27 +1,20 @@
-import {createElement, render} from '../../render.js';
+import {createElement, render} from '../../framework/render.js';
 import {humanizeDateDay, humanizeDateHour, humanizeDuration} from '../../utils.js';
+import AbstractView from '../../framework/view/abstract-view';
 
-
-class OfferItem {
+class OfferItem extends AbstractView {
   constructor(offer) {
+    super();
     this.offer = offer;
   }
 
-  getTemplate() {
+  get template() {
     return (
       `<li class="event__offer">
       <span class="event__offer-title">${this.offer.title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${this.offer.price}</span>
     </li>`);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
   }
 }
 
@@ -71,23 +64,28 @@ function createTemplate(point) {
   );
 }
 
-export default class PointItem {
-  constructor(point) {
+export default class PointItem extends AbstractView {
+  #element = null;
+  #onClick = null;
+  constructor(point, onBtnClick) {
+    super();
     this.point = point;
+    this.#onClick = onBtnClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onClick);
   }
 
-  getTemplate() {
+  get template() {
     return createTemplate(this.point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+      const offersContainer = this.#element.querySelector('.event__selected-offers');
+      this.point.offers.forEach((offer) => {
+        render(new OfferItem(offer), offersContainer);
+      });
     }
-    const offersContainer = this.element.querySelector('.event__selected-offers');
-    this.point.offers.forEach((offer) => {
-      render(new OfferItem(offer), offersContainer);
-    });
-    return this.element;
+    return this.#element;
   }
 }

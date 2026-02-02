@@ -1,14 +1,16 @@
-import {createElement, render} from '../../render.js';
+import {createElement, render} from '../../framework/render.js';
 import {getRandomArrayElement, humanizeFullDate} from '../../utils.js';
 import {OFFERS_SHORT_TITLES} from '../../const.js';
+import AbstractView from '../../framework/view/abstract-view';
 
-class OfferItem {
+class OfferItem extends AbstractView {
   constructor(offer, checked) {
+    super();
     this.offer = offer;
     this.checked = checked;
   }
 
-  getTemplate() {
+  get template() {
     const isChecked = this.checked ? 'checked' : '';
     const shortTitle = getRandomArrayElement(OFFERS_SHORT_TITLES);
     return (
@@ -21,14 +23,6 @@ class OfferItem {
       </label>
     </div>`
     );
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
   }
 }
 
@@ -152,25 +146,41 @@ function createTemplate(point) {
 }
 
 
-export default class EditPointForm {
-  constructor(point, pointTypeOffers) {
+export default class EditPointForm extends AbstractView {
+  #element = null;
+  #handleSubmit = null;
+  #handleCloseBtnClick = null;
+  constructor(point, pointTypeOffers, onSubmit, onCloseBtnClick, escClick) {
+    super();
     this.point = point;
     this.typeOffers = pointTypeOffers;
+
+    this.#handleSubmit = onSubmit;
+    this.#handleCloseBtnClick = onCloseBtnClick;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#handleCloseBtnClick);
+
   }
 
-  getTemplate() {
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleSubmit();
+  };
+
+  get template() {
     return createTemplate(this.point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+      const offersContainer = this.#element.querySelector('.event__available-offers');
+      this.typeOffers.forEach((offer) => {
+        const isChecked = this.point.offers.includes(offer.id);
+        render(new OfferItem(offer, isChecked), offersContainer);
+      });
     }
-    const offersContainer = this.element.querySelector('.event__available-offers');
-    this.typeOffers.forEach((offer) => {
-      const isChecked = this.point.offers.includes(offer.id);
-      render(new OfferItem(offer, isChecked), offersContainer);
-    });
-    return this.element;
+
+    return this.#element;
   }
 }

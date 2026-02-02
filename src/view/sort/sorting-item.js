@@ -1,4 +1,4 @@
-import {createElement} from '../../render.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 
 function createSortingItem(title, disabled, checked) {
   const label = title.charAt(0).toUpperCase() + title.slice(1);
@@ -13,22 +13,15 @@ function createSortingItem(title, disabled, checked) {
   );
 }
 
-export default class SortingItem {
+export default class SortingItem extends AbstractView {
   constructor(title, disabled = false, checked = false) {
+    super();
     this.title = title;
     this.disabled = disabled;
     this.checked = checked;
   }
 
-  getTemplate() {
+  get template() {
     return createSortingItem(this.title, this.disabled, this.checked);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
   }
 }

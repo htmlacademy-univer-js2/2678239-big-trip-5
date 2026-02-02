@@ -1,5 +1,7 @@
-import {createElement, render} from '../../render.js';
+import {createElement, render} from '../../framework/render.js';
 import FilterItem from './filter-item.js';
+import AbstractView from '../../framework/view/abstract-view.js';
+import {DEFAULT_FILTERS} from '../../const';
 
 function createFilterContainerTemplate() {
   return (
@@ -9,24 +11,26 @@ function createFilterContainerTemplate() {
   );
 }
 
-export default class FilterList {
-  constructor(filters = ['everything', 'future', 'present', 'past']) {
+export default class FilterList extends AbstractView {
+  #element = null;
+  constructor(filters = DEFAULT_FILTERS) {
+    super();
     this.filters = filters;
   }
 
-  getTemplate() {
+  get template() {
     return createFilterContainerTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
       this.filters.forEach((filterTitle) => {
         render(
           new FilterItem(filterTitle),
-          this.element);
+          this.#element);
       });
     }
-    return this.element;
+    return this.#element;
   }
 }

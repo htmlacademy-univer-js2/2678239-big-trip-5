@@ -1,4 +1,4 @@
-import {createElement} from '../../render.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 
 function createFilterItem(title) {
   const label = title.charAt(0).toUpperCase() + title.slice(1);
@@ -10,21 +10,14 @@ function createFilterItem(title) {
   );
 }
 
-export default class FilterItem {
+export default class FilterItem extends AbstractView {
   constructor(title) {
+    super();
     this.title = title;
   }
 
-  getTemplate() {
+  get template() {
     return createFilterItem(this.title);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
   }
 }
 
