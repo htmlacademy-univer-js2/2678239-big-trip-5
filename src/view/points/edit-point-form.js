@@ -143,7 +143,6 @@ function createFormContainerTemplate(point, pointTypesOffers) {
 
 
 export default class EditPointForm extends AbstractView {
-  #element = null;
   #handleSubmit = null;
   #handleCloseBtnClick = null;
   constructor(point, pointTypeOffers, onSubmit, onCloseBtnClick) {

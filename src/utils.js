@@ -1,4 +1,4 @@
-import {TEXT_TEMPLATE} from './const.js';
+import {OFFERS, TEXT_TEMPLATE} from './const.js';
 import dayjs from 'dayjs';
 
 function getRandomArrayElement(items) {
@@ -20,6 +20,13 @@ function generateRandomImages(count) {
     images.push(`https://loremflickr.com/248/152?random=${id}`);
   }
   return images;
+}
+
+function createIdGenerator() {
+  let id = 1;
+  return function () {
+    return id++;
+  };
 }
 
 function generateText() {
@@ -68,4 +75,8 @@ function humanizeDuration(startTime, endTime) {
   return `${String(days).padStart(2,'0')}D ${String(hours).padStart(2,'0')}H ${String(mins).padStart(2,'0')}M`;
 }
 
-export {getRandomArrayElement, generateRandomNumber, generateRandomImages, generateText, getRandomElementsFromArray, humanizeDateDay, humanizeDateHour, humanizeDuration, humanizeFullDate};
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export {getRandomArrayElement, updateItem, generateRandomNumber, generateRandomImages, generateText, getRandomElementsFromArray, createIdGenerator, humanizeDateDay, humanizeDateHour, humanizeDuration, humanizeFullDate};
