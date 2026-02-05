@@ -1,4 +1,4 @@
-import {OFFERS, TEXT_TEMPLATE} from './const.js';
+import { TEXT_TEMPLATE} from './const.js';
 import dayjs from 'dayjs';
 
 function getRandomArrayElement(items) {
