@@ -1,4 +1,5 @@
 import {
+  createIdGenerator,
   generateRandomImages,
   generateRandomNumber,
   generateText,
@@ -13,8 +14,10 @@ function createMockData() {
   const destinations = generateDescriptions();
   const offers = generateOffers();
   const points = [];
+  const generateId = createIdGenerator();
   for (let i = 0; i < POINT_COUNT; i++) {
-    points.push(createPoint(offers, getRandomArrayElement(destinations)));
+    const point = createPoint(offers, getRandomArrayElement(destinations));
+    points.push({id: generateId(), ...point});
   }
   return {
     destinations,

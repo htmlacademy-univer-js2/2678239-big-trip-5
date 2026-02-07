@@ -12,6 +12,10 @@ export default class Model {
     return this.#points;
   }
 
+  set points(points) {
+    this.#points = points;
+  }
+
   get offers() {
     return this.#offers;
   }
