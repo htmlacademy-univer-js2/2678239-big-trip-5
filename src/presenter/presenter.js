@@ -44,10 +44,7 @@ export default class Presenter {
       render(this.#eventListComponent, this.#eventsContainerHTML);
     }
     points.forEach((point) => {
-      const destination = this.#model.getDestinationById(point.destinationId);
-      const pointOffers = this.#model.getOffersByIds(point.offers);
-      const combinedPoint = {...point, offers: pointOffers, destination: destination};
-      this.#renderPoint(combinedPoint);
+      this.#renderPoint(point);
     });
   }
 
