@@ -16,7 +16,7 @@ function generateRandomImages(count) {
   const selectedIds = getRandomElementsFromArray(ids, count);
   const images = [];
   for (const id of selectedIds) {
-    images.push(`https://loremflickr.com/248/152?random=${id}`);
+    images.push(`img/photos/${id % 5 + 1}.jpg`);
   }
   return images;
 }

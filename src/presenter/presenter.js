@@ -5,7 +5,7 @@ import PointPresenter from './point-presenter.js';
 import {updateItem} from '../utils/helpers.js';
 import {DEFAULT_SORTING_OPTIONS} from '../const.js';
 import FilterList from '../view/filter-list.js';
-import {sortByPrice, sortByTimeDuration} from '../utils/sort.js';
+import {sortByDate, sortByPrice, sortByTimeDuration} from '../utils/sort.js';
 
 export default class Presenter {
   #model = null;
@@ -44,7 +44,10 @@ export default class Presenter {
       render(this.#eventListComponent, this.#eventsContainerHTML);
     }
     points.forEach((point) => {
-      this.#renderPoint(point);
+      const destination = this.#model.getDestinationById(point.destinationId);
+      const pointOffers = this.#model.getOffersByIds(point.offers);
+      const combinedPoint = {...point, offers: pointOffers, destination: destination};
+      this.#renderPoint(combinedPoint);
     });
   }
 
@@ -75,15 +78,15 @@ export default class Presenter {
     }
     this.#currentSortType = sortType;
     this.#clearPoints();
+    const copyPoints = this.#model.points.slice();
+
     if (sortType === DEFAULT_SORTING_OPTIONS.DAY.title) {
-      this.#renderPoints(this.#model.points);
+      this.#renderPoints(copyPoints.sort(sortByDate));
     }
     if (sortType === DEFAULT_SORTING_OPTIONS.TIME.title) {
-      const copyPoints = this.#model.points.slice();
       this.#renderPoints(copyPoints.sort(sortByTimeDuration));
     }
     if (sortType === DEFAULT_SORTING_OPTIONS.PRICE.title) {
-      const copyPoints = this.#model.points.slice();
       this.#renderPoints(copyPoints.sort(sortByPrice));
     }
   };

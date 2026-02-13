@@ -32,13 +32,15 @@ export default class PointPresenter {
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
-    const destination = this.#model.getDestinationById(point.destinationId);
-    const pointTypeOffers = this.#model.getOffersByType(point.type);
-    const pointOffers = this.#model.getOffersByType(point.type, point.offers);
-    const combinedPoint = {...point, offers: pointOffers, destination: destination};
-
-    this.#pointComponent = new PointItem(combinedPoint, this.#onEditClick, this.#onFavouriteClick);
-    this.#pointEditComponent = new EditPointForm(combinedPoint, pointTypeOffers, this.#onSubmitCLick, this.#onFormCloseClick);
+    this.#pointComponent = new PointItem(point, this.#onEditClick, this.#onFavouriteClick);
+    this.#pointEditComponent = new EditPointForm({
+      point,
+      onSubmit: this.#onSubmitCLick,
+      onCloseBtnClick: this.#onFormCloseClick,
+      onTypeChange: this.#onTypeChange,
+      onDestinationChange: this.#onDestinationChange,
+      onOfferChange: this.#onOfferChange,
+    });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#eventListContainerHTML);
@@ -62,6 +64,17 @@ export default class PointPresenter {
     remove(this.#pointEditComponent);
   }
 
+  #onTypeChange = (type) => this.#model.getOffersByType(type);
+
+  #onDestinationChange = (cityName) => this.#model.getDestinationByCityName(cityName);
+
+  #onOfferChange = (offers, selectedId, type) => {
+    const updatedOffer = this.#model.getOffersByIds([selectedId], type)[0];
+    return offers.map((o) => o.id).includes(selectedId)
+      ? offers.filter((o) => o.id !== selectedId)
+      : [...offers, updatedOffer];
+  };
+
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
       this.#replaceFormToCard();
@@ -72,7 +85,8 @@ export default class PointPresenter {
     this.#handleDataChange({...this.#point, isFavourite: !this.#point.isFavourite});
   };
 
-  #onSubmitCLick = () => {
+  #onSubmitCLick = (point) => {
+    this.#handleDataChange(point);
     this.#replaceFormToCard();
   };
 

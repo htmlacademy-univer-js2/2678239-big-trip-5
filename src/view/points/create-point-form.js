@@ -1,10 +1,11 @@
-import {createDestinationSectionTemplate} from './destination-section.js';
-import {createOffersSectionTemplate} from './offers-section.js';
-import AbstractView from '../../../framework/view/abstract-view.js';
+import {createDestinationSectionTemplate} from './sections/destination-section.js';
+import {createOffersSectionTemplate} from './sections/offers-section.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 
-function createTemplate(isOffersSection, isDestinationSection) {
-  const offerSection = isOffersSection ? createOffersSectionTemplate() : '';
-  const destinationSection = isDestinationSection ? createDestinationSectionTemplate() : '';
+function createTemplate(offers, destination) {
+  const {description, photos} = destination;
+  const offerSection = createOffersSectionTemplate([], offers);
+  const destinationSection = createDestinationSectionTemplate(description, photos);
 
   return (
     `<li class="trip-events__item">
@@ -110,13 +111,15 @@ function createTemplate(isOffersSection, isDestinationSection) {
 }
 
 export default class CreatePointForm extends AbstractView {
-  constructor(offers = true, destination = true) {
+  #pointTypeOffers = null;
+  #destination = null;
+  constructor(offers, destination) {
     super();
-    this.offers = offers;
-    this.destination = destination;
+    this.#pointTypeOffers = offers;
+    this.#destination = destination;
   }
 
   get template() {
-    return createTemplate(this.offers, this.destination);
+    return createTemplate(this.#pointTypeOffers, this.#destination);
   }
 }
