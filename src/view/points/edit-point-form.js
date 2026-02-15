@@ -151,17 +151,12 @@ export default class EditPointForm extends AbstractStatefulView {
   }
 
   #changeDestinationHandler = (evt) => {
-    let newDestination = this.#getDestinationByCity(evt.target.value);
-    if (!newDestination) {
-      newDestination = {
-        city: evt.target.value,
-        description: null,
-        photos: null,
-      };
+    const newDestination = this.#getDestinationByCity(evt.target.value);
+    if (newDestination) {
+      this.updateElement({
+        destination: newDestination,
+      });
     }
-    this.updateElement({
-      destination: newDestination,
-    });
   };
 
   #changeTypeHandler = (evt) => {
