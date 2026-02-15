@@ -36,9 +36,8 @@ export default class PointPresenter {
       point: this.#point,
       onSubmit: this.#onSubmitCLick,
       onCloseBtnClick: this.#onFormCloseClick,
-      onTypeChange: this.#onTypeChange,
-      onDestinationChange: this.#onDestinationChange,
-      onOfferChange: this.#onOfferChange,
+      offers: this.#model.offers,
+      destinations: this.#model.destinations,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -60,7 +59,7 @@ export default class PointPresenter {
 
   #buildViewData(point) {
     const destination = this.#model.getDestinationById(point.destinationId);
-    const pointOffers = this.#model.getOffersByIds(point.offers);
+    const pointOffers = this.#model.getOffersByIds(point.offers, point.type);
     const viewPoint = {...point, offers: pointOffers, destination: destination};
 
     delete viewPoint.destinationId;
@@ -81,17 +80,6 @@ export default class PointPresenter {
     remove(this.#pointEditComponent);
   }
 
-  #onTypeChange = (type) => this.#model.getOffersByType(type);
-
-  #onDestinationChange = (cityName) => this.#model.getDestinationByCityName(cityName);
-
-  #onOfferChange = (offers, selectedId, type) => {
-    const updatedOffer = this.#model.getOffersByIds([selectedId], type)[0];
-    return offers.map((o) => o.id).includes(selectedId)
-      ? offers.filter((o) => o.id !== selectedId)
-      : [...offers, updatedOffer];
-  };
-
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
       this.#replaceFormToCard();
@@ -99,13 +87,13 @@ export default class PointPresenter {
   }
 
   #onFavouriteClick = () => {
-    const updPoint = this.#buildModelData({...this.#point, isFavourite: !this.#point.isFavourite});
-    this.#handleDataChange(updPoint);
+    const updatedPoint = this.#buildModelData({...this.#point, isFavourite: !this.#point.isFavourite});
+    this.#handleDataChange(updatedPoint);
   };
 
   #onSubmitCLick = (point) => {
-    const updPoint = this.#buildModelData(point);
-    this.#handleDataChange(updPoint);
+    const updatedPoint = this.#buildModelData(point);
+    this.#handleDataChange(updatedPoint);
     this.#replaceFormToCard();
   };
 

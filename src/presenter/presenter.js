@@ -64,9 +64,9 @@ export default class Presenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedTask) => {
-    this.#model.points = updateItem(this.#model.points, updatedTask);
-    this.#pointPresenters.get(updatedTask.id).init(updatedTask);
+  #handlePointChange = (updatedPoint) => {
+    this.#model.points = updateItem(this.#model.points, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
   #handleSortTypeChange = (sortType) => {

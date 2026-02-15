@@ -28,6 +28,10 @@ function createIdGenerator() {
   };
 }
 
+function getObjectFromArrayById(array, id) {
+  return array.find((item) => item.id === id);
+}
+
 function generateText() {
   const sentences = TEXT_TEMPLATE.split('.');
   return getRandomElementsFromArray(sentences, generateRandomNumber(1, 5));
@@ -51,4 +55,5 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export {getRandomArrayElement, updateItem, generateRandomNumber, generateRandomImages, generateText, getRandomElementsFromArray, createIdGenerator};
+export {getRandomArrayElement, updateItem, generateRandomNumber, generateRandomImages, generateText,
+  getRandomElementsFromArray, createIdGenerator, getObjectFromArrayById};
